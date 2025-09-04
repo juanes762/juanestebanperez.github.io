@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Salud Mental - App</title>
+<style>
+/* ... Mantén todo el CSS igual que antes ... */
+/* (incluye el CSS del botón respiración, juegos, etc.) */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0; padding: 0;
+  background: linear-gradient(135deg, #d0e7f9, #f9fafe);
+  color: #34495e;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+header {
+  background: #3174d4;
+  color: white;
+  padding: 20px 30px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  box-shadow: 0 4px 8px rgba(49, 116, 212, 0.4);
+}
+nav {
+  display: flex;
+  justify-content: center;
+  background: #255d9b;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+nav button {
+  background: none;
+  border: none;
+  color: white;
+  padding: 18px 28px;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 600;
+  transition: background-color 0.4s ease;
+  border-bottom: 3px solid transparent;
+}
+nav button:hover, nav button.active {
+  background: #3c8ddb;
+  border-bottom: 3px solid #fceabb;
+}
+main {
+  padding: 30px 20px;
+  max-width: 520px;
+  margin: 30px auto 50px auto;
+  flex-grow: 1;
+}
+section.hidden {
+  display: none;
+}
+/* Login */
+#login {
+  background: white;
+  padding: 35px 30px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(49,116,212,0.25);
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+#login h2 {
+  margin-bottom: 30px;
+  font-weight: 700;
+  color: #3174d4;
+  font-size: 26px;
+  letter-spacing: 0.05em;
+}
+#login input[type="text"] {
+  width: 90%;
+  padding: 14px 18px;
+  font-size: 18px;
+  border: 2.5px solid #3174d4;
+  border-radius: 8px;
+  margin-bottom: 28px;
+  outline-offset: 2px;
+  transition: border-color 0.3s ease;
+}
+#login input[type="text"]:focus {
+  border-color: #1c5bbf;
+}
+#login button {
+  padding: 14px 36px;
+  font-size: 20px;
+  background-color: #3174d4;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 6px 14px rgba(49, 116, 212, 0.4);
+  transition: background-color 0.3s ease;
+}
+#login button:disabled {
+  background-color: #9ebff4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+#login button:hover:not(:disabled) {
+  background-color: #1c5bbf;
+}
+/* Navegación app */
+nav {
+  display: none;
+}
+nav.active {
+  display: flex;
+}
+/* Contenido app */
+#appContent {
+  display: none;
+}
+/* Pantallas app internas */
+main > section {
+  background: white;
+  padding: 30px 35px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(49,116,212,0.1);
+  margin-bottom: 30px;
+  transition: box-shadow 0.3s ease;
+}
+main > section:hover {
+  box-shadow: 0 9px 30px rgba(49,116,212,0.15);
+}
+main > section h2 {
+  color: #3174d4;
+  font-weight: 700;
+  font-size: 24px;
+  margin-bottom: 18px;
+  letter-spacing: 0.04em;
+}
+ul {
+  padding-left: 24px;
+}
+li {
+  margin-bottom: 12px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+canvas {
+  max-width: 100%;
+  margin-top: 30px;
+  border: 1.8px solid #d8e9ff;
+  background: #f8fbff;
+  border-radius: 12px;
+  box-shadow: inset 0 0 12px #d2e3ff;
+}
+.emotion-btn {
+  font-size: 38px;
+  margin: 15px 12px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), color 0.3s ease;
+  filter: drop-shadow(1px 2px 1px rgba(50,50,50,0.1));
+}
+.emotion-btn:hover {
+  transform: scale(1.4);
+  color: #3174d4;
+}
+.emotion-label {
+  display: block;
+  font-size: 16px;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 600;
+  color: #345678;
+}
+#gameMemory {
+  margin-top: 20px;
+}
+#memoryBoard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+.memoryCard {
+  width: 60px;
+  height: 60px;
+  background-color: #3174d4;
+  color: white;
+  font-size: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 12px;
+  user-select: none;
+  box-shadow: 0 3px 7px rgba(49,116,212,0.5);
+  transition: background-color 0.3s ease;
+}
+.memoryCard.matched {
+  background-color: #32cd32;
+  cursor: default;
+  box-shadow: 0 3px 8px rgba(50,205,50,0.7);
+}
+.memoryCard:hover:not(.matched) {
+  background-color: #1c5bbf;
+}
+#resetMemory {
+  margin-top: 14px;
+  padding: 10px 26px;
+  font-size: 18px;
+  background-color: #3174d4;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 5px 14px rgba(49, 116, 212, 0.4);
+  transition: background-color 0.3s ease;
+}
+#resetMemory:hover {
+  background-color: #1c5bbf;
+}
+#rpsGame {
+  margin-top: 30px;
+  text-align: center;
+}
+.rpsBtn {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+  background-color: #3174d4;
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(49,116,212,0.45);
+  transition: background-color 0.3s ease;
+}
+.rpsBtn:hover {
+  background-color: #1c5bbf;
+}
+#rpsResult {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  min-height: 40px;
+  color: #114b8a;
+}
+#breathButton {
+  display: block;
+  margin: 15px auto 40px auto;
+  background-color: #3174d4;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: default;
+  box-shadow: 0 6px 15px rgba(49,116,212,0.5);
+  transition: all 1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  user-select: none;
+  pointer-events: none;
+}
+#breathButton.enlarge {
+  width: 160px;
+  height: 160px;
+  font-size: 24px;
+}
+#breathButton.shrink {
+  width: 80px;
+  height: 80px;
+  font-size: 16px;
+}
+/* Nuevo contenido neurotransmisores */
+main > section#neurotransmisores ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+main > section#neurotransmisores video {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(49,116,212,0.2);
+}
+</style>
+</head>
+<body>
+<header>Salud Mental App</header>
+<main id="login">
+  <h2>Iniciar Sesión</h2>
+  <input type="text" placeholder="Ingresa tu usuario" id="usernameInput" autocomplete="off" />
+  <br />
+  <button id="loginBtn" disabled>Entrar</button>
+</main>
+<nav id="appNav">
+  <button class="nav-btn active" data-target="registro">Registro de emociones</button>
+  <button class="nav-btn" data-target="historial">Historial / Gráficas</button>
+  <button class="nav-btn" data-target="sugerencias">Sugerencias y consejos</button>
+  <button class="nav-btn" data-target="recursos">Recursos extra</button>
+  <button class="nav-btn" data-target="neurotransmisores">Neurotransmisores</button>
+</nav>
+<main id="appContent">
+  <section id="registro">
+    <h2>¿Cómo te sientes hoy?</h2>
+    <div id="emotions-list">
+      <button class="emotion-btn" data-emotion="Feliz" title="Feliz">😊<span class="emotion-label">Feliz</span></button>
+      <button class="emotion-btn" data-emotion="Triste" title="Triste">😢<span class="emotion-label">Triste</span></button>
+      <button class="emotion-btn" data-emotion="Ansioso" title="Ansioso">😰<span class="emotion-label">Ansioso</span></button>
+      <button class="emotion-btn" data-emotion="Enojado" title="Enojado">😠<span class="emotion-label">Enojado</span></button>
+      <button class="emotion-btn" data-emotion="Relajado" title="Relajado">😌<span class="emotion-label">Relajado</span></button>
+    </div>
+  </section>
+  <section id="historial" class="hidden">
+    <h2>Historial de emociones</h2>
+    <ul id="emotion-history"></ul>
+    <canvas id="emotion-chart" width="700" height="350"></canvas>
+  </section>
+  <section id="sugerencias" class="hidden">
+    <h2>Sugerencias y consejos para manejar tus emociones</h2>
+    <ul id="consejos-list">
+      <li>Selecciona una emoción en "Registro de emociones" para ver consejos personalizados.</li>
+    </ul>
+  </section>
+  <section id="recursos" class="hidden">
+    <h2>Recursos extra</h2>
+    <ul>
+      <li><strong>Ejercicio:</strong> 
+       <button id="breathButton">Inhala</button>
+      </li>
+<li><strong>Música:</strong>
+    <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZjm5fq5s8B1" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+  </li>
+      <li><strong>Frase motivadora:</strong> “Esto también pasará.”</li>
+      <li><strong>Tip:</strong> Dedica 10 minutos al día para hacer algo que disfrutes.</li>
+    </ul>
+    <h3>Video: Importancia de la Salud Mental</h3>
+    <video width="100%" height="240" controls>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      Tu navegador no soporta la etiqueta de video.
+    </video>
+    <h3>Juegos para el bienestar emocional</h3>
+    <div id="gameMemory">
+      <h4>Juego de Memoria de Emociones</h4>
+      <div id="memoryBoard"></div>
+      <button id="resetMemory">Reiniciar Juego</button>
+    </div>
+    <div id="rpsGame" style="margin-top: 30px; text-align: center;">
+      <h4>Juego: Piedra, Papel o Tijeras</h4>
+      <div>
+        <button class="rpsBtn" data-choice="piedra">✊ Piedra</button>
+        <button class="rpsBtn" data-choice="papel">✋ Papel</button>
+        <button class="rpsBtn" data-choice="tijeras">✌️ Tijeras</button>
+      </div>
+      <p id="rpsResult"></p>
+    </div>
+  </section>
+  <section id="neurotransmisores" class="hidden">
+    <h2>Neurotransmisores y Emociones</h2>
+    <p>Los neurotransmisores son sustancias químicas que transmiten señales en el cerebro y están estrechamente relacionados con las emociones que experimentamos. A continuación, algunos neurotransmisores clave asociados con las emociones principales registradas en esta app:</p>
+<ul>
+    <li><strong>Dopamina (Felicidad)</strong>: Relacionada con la sensación de placer y recompensa.
+      <iframe width="100%" height="240" src="https://www.youtube.com/embed/z4KeSF9rOeQ" title="Dopamina" frameborder="0" allowfullscreen></iframe>
+    </li>
+    <li><strong>Serotonina (Tristeza)</strong>: Influye en el estado de ánimo y la regulación del sueño.
+      <iframe width="100%" height="240" src="https://www.youtube.com/embed/XZ6C7FKDfzs" title="Serotonina" frameborder="0" allowfullscreen></iframe>
+    </li>
+    <li><strong>GABA (Ansiedad)</strong>: Actúa como neurotransmisor inhibidor calmando la actividad cerebral.
+      <iframe width="100%" height="240" src="https://www.youtube.com/embed/L9blnjOdf44" title="GABA y sistema nervioso" frameborder="0" allowfullscreen></iframe>
+    </li>
+    <li><strong>Adrenalina (Enojo)</strong>: Relacionada con la respuesta de lucha o huida.
+      <iframe width="100%" height="240" src="https://www.youtube.com/embed/XmpvpQ7Og9s" title="Adrenalina y emociones" frameborder="0" allowfullscreen></iframe>
+    </li>
+    <li><strong>Endorfinas (Relajación)</strong>: Producen sensación de bienestar y alivian el dolor.
+      <iframe width="100%" height="240" src="https://www.youtube.com/embed/Ln6Vgc5GJew" title="Endorfinas" frameborder="0" allowfullscreen></iframe>
+    </li>
+  </ul>
+</section>
+</main>
+<script>
+  // Todo el código JS anterior (login, navegación, emociones, juegos, respiración) sin cambios excepto la función showSection
+  const loginMain = document.getElementById('login');
+  const appNav = document.getElementById('appNav');
+  const appContent = document.getElementById('appContent');
+  const usernameInput = document.getElementById('usernameInput');
+  const loginBtn = document.getElementById('loginBtn');
+  loginBtn.disabled = true;
+  usernameInput.addEventListener('input', () => {
+    loginBtn.disabled = usernameInput.value.trim() === '';
+  });
+  loginBtn.addEventListener('click', () => {
+    const username = usernameInput.value.trim();
+    if(username === '') return;
+    localStorage.setItem('username', username);
+    loginMain.style.display = 'none';
+    appNav.classList.add('active');
+    appContent.style.display = 'block';
+    showSection('registro');
+    alert(`Bienvenido, ${username}!`);
+  });
+  const navButtons = document.querySelectorAll('nav button.nav-btn');
+  const sections = appContent.querySelectorAll('section');
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      navButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      showSection(btn.getAttribute('data-target'));
+    });
+  });
+  function showSection(id) {
+    sections.forEach(section => {
+      section.classList.add('hidden');
+    });
+    const targetSection = document.getElementById(id);
+    if(targetSection) targetSection.classList.remove('hidden');
+    if(id === 'sugerencias') {
+      updateSuggestions();
+    }
+  }
+  window.addEventListener('load', () => {
+    const storedUser = localStorage.getItem('username');
+    if(storedUser) {
+      loginMain.style.display = 'none';
+      appNav.classList.add('active');
+      appContent.style.display = 'block';
+      showSection('registro');
+      alert(`Bienvenido de nuevo, ${storedUser}!`);
+    }
+    initMemoryGame();
+    initBreathButtonAuto();
+    initRpsGame();
+  });
+  // ... resto del JS para emociones, juegos y respiración, igual como antes, sin cambio
+  // (Repetir aquí según el código previo dado)
+  // Juego de Memoria + Respiración + Piedra Papel Tijeras, etc.
+
+  // Emociones.js
+  const emotions = document.querySelectorAll('.emotion-btn');
+  const historyList = document.getElementById('emotion-history');
+  const chartCanvas = document.getElementById('emotion-chart');
+  const ctx = chartCanvas.getContext('2d');
+  const consejosPorEmocion = {
+    "Feliz": [
+      "Comparte tu alegría con alguien cercano.",
+      "Aprovecha esta energía positiva para realizar alguna actividad creativa.",
+      "Haz algo agradable para ti mismo para mantener este buen ánimo."
+    ],
+    "Triste": [
+      "Permítete sentir y expresar tu tristeza.",
+      "Habla con alguien de confianza sobre cómo te sientes.",
+      "Realiza actividades que te conecten con momentos felices."
+    ],
+    "Ansioso": [
+      "Practica respiración profunda y pausada.",
+      "Realiza pausas cortas durante el día para relajarte.",
+      "Evita el consumo excesivo de cafeína y mantente hidratado."
+    ],
+    "Enojado": [
+      "Toma un momento para calmarte antes de reaccionar.",
+      "Ejercita liberación física (caminar, estiramientos).",
+      "Piensa en soluciones o cómo expresar tu emoción de forma constructiva."
+    ],
+    "Relajado": [
+      "Disfruta este momento y recarga energías.",
+      "Practica la meditación o mindfulness para mantener la calma.",
+      "Utiliza este estado para planificar tareas de manera tranquila."
+    ]
+  };
+  function saveEmotion(emotion) {
+    const data = JSON.parse(localStorage.getItem('emotionsData')) || [];
+    const now = new Date();
+    data.push({ emotion, date: now.toISOString() });
+    localStorage.setItem('emotionsData', JSON.stringify(data));
+    localStorage.setItem('lastEmotion', emotion);
+  }
+  function loadHistory() {
+    const data = JSON.parse(localStorage.getItem('emotionsData')) || [];
+    historyList.innerHTML = '';
+    if (data.length === 0) {
+      historyList.innerHTML = '<li>No hay registros todavía.</li>';
+      clearChart();
+      return;
+    }
+    const recent = data.slice(-10).reverse();
+    recent.forEach(item => {
+      const date = new Date(item.date);
+      const li = document.createElement('li');
+      li.textContent = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}: ${item.emotion}`;
+      historyList.appendChild(li);
+    });
+    drawChart(data);
+  }
+  function drawChart(data) {
+    ctx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+    const emotionsList = ["Feliz", "Triste", "Ansioso", "Enojado", "Relajado"];
+    const countsByDateEmotion = {};
+    data.forEach(item => {
+      const date = item.date.split('T')[0];
+      if (!countsByDateEmotion[date]) {
+        countsByDateEmotion[date] = {};
+        emotionsList.forEach(e => countsByDateEmotion[date][e] = 0);
+      }
+      countsByDateEmotion[date][item.emotion]++;
+    });
+    let dates = Object.keys(countsByDateEmotion).sort();
+    if (dates.length > 7) {
+      dates = dates.slice(-7);
+    }
+    const paddingLeft = 60;
+    const paddingBottom = 60;
+    const paddingTop = 30;
+    const chartWidth = chartCanvas.width - paddingLeft - 40;
+    const chartHeight = chartCanvas.height - paddingBottom - paddingTop;
+    let maxCount = 1;
+    dates.forEach(date => {
+      emotionsList.forEach(emotion => {
+        if (countsByDateEmotion[date][emotion] > maxCount) {
+          maxCount = countsByDateEmotion[date][emotion];
+        }
+      });
+    });
+    ctx.strokeStyle = '#333';
+    ctx.fillStyle = '#333';
+    ctx.font = '12px Arial';
+    ctx.textAlign = 'center';
+    ctx.beginPath();
+    ctx.moveTo(paddingLeft, paddingTop);
+    ctx.lineTo(paddingLeft, chartHeight + paddingTop);
+    ctx.lineTo(chartWidth + paddingLeft, chartHeight + paddingTop);
+    ctx.stroke();
+    const yLines = 5;
+    for(let i=0; i<=yLines; i++) {
+      const y = paddingTop + (chartHeight / yLines) * i;
+      const value = maxCount - Math.round((maxCount / yLines) * i);
+      ctx.fillText(value, paddingLeft - 30, y + 4);
+      ctx.strokeStyle = "#ccc";
+      ctx.beginPath();
+      ctx.moveTo(paddingLeft, y);
+      ctx.lineTo(chartWidth + paddingLeft, y);
+      ctx.stroke();
+      ctx.strokeStyle = '#333';
+    }
+    const colors = {
+      "Feliz": "#FFD700",
+      "Triste": "#1E90FF",
+      "Ansioso": "#FF8C00",
+      "Enojado": "#FF4500",
+      "Relajado": "#32CD32"
+    };
+    const barGroupWidth = (chartWidth / dates.length) * 0.8;
+    const barWidth = barGroupWidth / emotionsList.length;
+    dates.forEach((date, dateIndex) => {
+      emotionsList.forEach((emotion, emoIndex) => {
+        const count = countsByDateEmotion[date][emotion];
+     if(count > 0) {
+          const barHeight = (count / maxCount) * chartHeight;
+          const x = paddingLeft + (dateIndex * (chartWidth / dates.length)) + (emoIndex * barWidth);
+          const y = paddingTop + chartHeight - barHeight;
+          ctx.fillStyle = colors[emotion];
+          ctx.fillRect(x, y, barWidth * 0.9, barHeight);
+          ctx.fillStyle = "#000";
+          ctx.textAlign = "center";
+          ctx.fillText(count, x + barWidth * 0.45, y - 5);
+        }
+      });
+      ctx.fillStyle = "#333";
+      ctx.textAlign = "center";
+      ctx.save();
+      ctx.translate(paddingLeft + dateIndex * (chartWidth / dates.length) + barGroupWidth/2, paddingTop + chartHeight + 15);
+      ctx.rotate(-Math.PI / 4);
+      ctx.fillText(date, 0, 0);
+      ctx.restore();
+    });
+    ctx.textAlign = "left";
+    emotionsList.forEach((emotion, i) => {
+      const blockX = paddingLeft + chartWidth - 150;
+      const blockY = paddingTop + i * 20;
+      ctx.fillStyle = colors[emotion];
+      ctx.fillRect(blockX, blockY, 15, 15);
+      ctx.fillStyle = "#333";
+      ctx.fillText(emotion, blockX + 20, blockY + 13);
+    });
+  }
+  function clearChart() {
+    ctx.clearRect(0, 0, chartCanvas.width, chartCanvas.height);
+  }
+  function updateSuggestions() {
+    const consejosList = document.getElementById('consejos-list');
+    const lastEmotion = localStorage.getItem('lastEmotion');
+    if (!lastEmotion || !consejosPorEmocion[lastEmotion]) {
+      consejosList.innerHTML = '<li>Selecciona una emoción en "Registro de emociones" para ver consejos personalizados.</li>';
+      return;
+    }
+    const consejos = consejosPorEmocion[lastEmotion];
+    consejosList.innerHTML = `<li><strong>Última emoción registrada:</strong> ${lastEmotion}</li>`;
+    consejos.forEach(c => {
+      const li = document.createElement('li');
+      li.textContent = c;
+      consejosList.appendChild(li);
+    });
+  }
+  emotions.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const emotion = btn.getAttribute('data-emotion');
+      saveEmotion(emotion);
+      alert(`Emoción "${emotion}" registrada.`);
+      loadHistory();
+      showSection('historial');
+      setTimeout(() => {
+        showSection('sugerencias');
+        navButtons.forEach(b => b.classList.remove('active'));
+        document.querySelector('nav button[data-target="sugerencias"]').classList.add('active');
+      }, 800);
+    });
+  });
+
+  // Juego Memoria
+  const memoryEmojis = ["😊", "😢", "😰", "😠", "😌", "😍", "😎", "😴", "😇", "🤔", "😥", "😡"];
+  let memoryCards = [];
+  let firstCard = null;
+  let secondCard = null;
+  let lockBoard = false;
+  function initMemoryGame() {
+    if (!memoryBoard) return;
+    memoryCards = [...memoryEmojis, ...memoryEmojis];
+    shuffleArray(memoryCards);
+    memoryBoard.innerHTML = "";
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
+    memoryCards.forEach((emoji) => {
+      const card = document.createElement("div");
+      card.classList.add("memoryCard");
+      card.setAttribute("data-emoji", emoji);
+      card.textContent = "?";
+      card.addEventListener("click", flipCard);
+      memoryBoard.appendChild(card);
+    });
+  }
+  function flipCard(event) {
+    const card = event.target;
+    if (lockBoard || card.classList.contains("matched") || card === firstCard) return;
+    card.textContent = card.getAttribute("data-emoji");
+    if (!firstCard) {
+      firstCard = card;
+      return;
+    }
+    secondCard = card;
+    lockBoard = true;
+    if (firstCard.getAttribute("data-emoji") === secondCard.getAttribute("data-emoji")) {
+      firstCard.classList.add("matched");
+      secondCard.classList.add("matched");
+      resetTurn();
+    } else {
+      setTimeout(() => {
+        firstCard.textContent = "?";
+        secondCard.textContent = "?";
+        resetTurn();
+      }, 1000);
+    }
+  }
+  function resetTurn() {
+    [firstCard, secondCard] = [null, null];
+    lockBoard = false;
+  }
+  function shuffleArray(array) {
+    for(let i = array.length -1; i>0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+  resetMemory.addEventListener("click", initMemoryGame);
+
+  // Juego Piedra, Papel o Tijeras
+  function initRpsGame() {
+    const rpsButtons = document.querySelectorAll('.rpsBtn');
+    const rpsResult = document.getElementById('rpsResult');
+
+    if (!rpsButtons.length || !rpsResult) return;
+
+    function computerChoice() {
+      const choices = ['piedra', 'papel', 'tijeras'];
+      const idx = Math.floor(Math.random() * choices.length);
+      return choices[idx];
+    }
+
+    function determineWinner(user, computer) {
+      if(user === computer) return 'Empate';
+      if(
+        (user === 'piedra' && computer === 'tijeras') ||
+        (user === 'papel' && computer === 'piedra') ||
+        (user === 'tijeras' && computer === 'papel')
+      ) {
+        return '¡Ganaste! 🎉';
+      }
+      return 'Perdiste. 😞';
+    }
+
+    rpsButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const userChoice = button.getAttribute('data-choice');
+        const compChoice = computerChoice();
+        const result = determineWinner(userChoice, compChoice);
+        rpsResult.textContent = `Tú: ${userChoice} - Computadora: ${compChoice}. Resultado: ${result}`;
+      });
+    });
+  }
+
+  // Respiración automática continua
+  function initBreathButtonAuto() {
+    const breathButton = document.getElementById('breathButton');
+    if (!breathButton) return;
+    breathButton.classList.remove('enlarge', 'shrink');
+    let stepIndex = 0;
+    const steps = [
+      { text: "Inhala", className: "enlarge" },
+      { text: "Sostiene", className: "" },
+      { text: "Exhala", className: "shrink" }
+    ];
+    function nextStep() {
+      const step = steps[stepIndex];
+      breathButton.textContent = step.text;
+      breathButton.classList.remove('enlarge', 'shrink');
+      if(step.className) breathButton.classList.add(step.className);
+      stepIndex = (stepIndex + 1) % steps.length;
+      setTimeout(nextStep, 3000);
+    }
+    nextStep();
+  }
+</script>
+</body>
+</html>
